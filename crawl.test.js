@@ -1,13 +1,30 @@
-import { test, expect } from "@jest/globals";
-import { normalizeURL } from "./crawl";
+const { normalizeURL } = require("./crawl");
+const { test, expect } = require("@jest/globals");
 
-test("normalizeURL", () => {
-  expect(normalizeURL("https://example.com/")).toBe("https://example.com");
-  expect(normalizeURL("https://example.com")).toBe("https://example.com");
-  expect(normalizeURL("https://example.com/foo/")).toBe(
-    "https://example.com/foo"
-  );
-  expect(normalizeURL("https://example.com/foo")).toBe(
-    "https://example.com/foo"
-  );
+test("normalizeURL strip protocol", () => {
+  const input = "https://blog.boot.dev/path";
+  const actual = normalizeURL(input);
+  const expected = "blog.boot.dev/path";
+  expect(actual).toBe(expected);
+});
+
+test("normalizeURL strip trailing slash", () => {
+  const input = "https://blog.boot.dev/path/";
+  const actual = normalizeURL(input);
+  const expected = "blog.boot.dev/path";
+  expect(actual).toBe(expected);
+});
+
+test("normalizeURL capitals", () => {
+  const input = "https://BLOG.boot.dev/path/";
+  const actual = normalizeURL(input);
+  const expected = "blog.boot.dev/path";
+  expect(actual).toBe(expected);
+});
+
+test("normalizeURL strip http", () => {
+  const input = "http://blog.boot.dev/path/";
+  const actual = normalizeURL(input);
+  const expected = "blog.boot.dev/path";
+  expect(actual).toBe(expected);
 });
